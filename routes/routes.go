@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/AjayKumar-j-s/EventPlanner/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,11 +11,14 @@ func Registerroutes(server *gin.Engine){
 
 	server.GET("/event/:id",GetEvent)
 	
-	server.POST("/events",CreateEvents)
+	authenticate := server.Group("/")
+	authenticate.Use(middleware.Authenticate)
+	authenticate.POST("/events",CreateEvents)
+	authenticate.PUT("/event/:id",Updateevent)
+	authenticate.DELETE("/event/:id",DeleteEvent)
+	authenticate.POST("/event/:id/register",RegisterEvent)
+	authenticate.DELETE("/event/:id/register",CancelRegistration)
 
-	server.PUT("/event/:id",Updateevent)
-
-	server.DELETE("/event/:id",DeleteEvent)
 
 	server.POST("/signup",Signup)
 

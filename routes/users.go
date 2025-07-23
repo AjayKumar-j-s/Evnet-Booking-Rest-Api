@@ -1,9 +1,11 @@
 package routes
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
+
 	"github.com/AjayKumar-j-s/EventPlanner/models"
+	"github.com/AjayKumar-j-s/EventPlanner/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -53,8 +55,14 @@ func Login(context *gin.Context){
 		context.JSON(http.StatusUnauthorized,gin.H{"message":"invalid Credentials"})
 		return
 	}
+	token,err := utils.GenerateToken(u.Email,u.UserID)
 
-	context.JSON(200,gin.H{"message":"Login Successful"})
+	if(err !=nil){
+		context.JSON(http.StatusInternalServerError,gin.H{"message":"Could not authenticate"})
+		return 
+	}
+
+	context.JSON(200,gin.H{"message":"Login Successful","token":token})
 
 
 

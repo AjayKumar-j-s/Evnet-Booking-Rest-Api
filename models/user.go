@@ -13,7 +13,7 @@ type User struct {
 	Password string
 }
 
-func (u User) Save() error {
+func (u *User) Save() error {
 
 	query := `INSERT INTO User (Email,Password) values (?,?)`
 
@@ -31,8 +31,12 @@ func (u User) Save() error {
 		return err
 	}
 
-	_,err = stmt.Exec(u.Email,Hpass)
+	res,err := stmt.Exec(u.Email,Hpass)
 
+	id,err := res.LastInsertId() 
+
+	u.UserID = id
+	
 	return err
 
 
@@ -41,7 +45,7 @@ func (u User) Save() error {
 
 func (u User) ValidatePassword()(error){
 
-	query := `SELECT Password FROM User WHERE Email = ?`
+	query := `SELECT UserID,Password FROM User WHERE Email = ?`
 
 	stmt,err := db.DB.Prepare(query)
 
@@ -55,7 +59,7 @@ func (u User) ValidatePassword()(error){
 
 	var Haspass string
 
-	err = row.Scan(&Haspass)
+	err = row.Scan(&u.UserID,&Haspass)
 	if(err !=  nil){
 		return err
 	}

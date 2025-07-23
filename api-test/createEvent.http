@@ -1,11 +1,14 @@
 POST http://localhost:8080/events
 Content-Type: application/json
+authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QyM0BlbWFpbC5jb20iLCJleHAiOjE3NTMyNTEzMjksInVzZXJpZCI6MH0.i-zsr1P9QMSfMh3f0REdTV7oZm-YbdlYU1qQqdZr6vE
+
+ 
+
 
 {
-  "name": "Test event 1",
-  "description": "A test Event 1",
-  "location": "A test Location 1",
-  "datetime": "2025-07-13T14:00:00Z",
-  "userid": 1
+  "name": "Test event 23",
+  "description": "A test Event 203",
+  "location": "A test Location 203",
+  "datetime": "2025-07-13T14:00:00Z"
 }
 

@@ -67,4 +67,22 @@ func createTable() {
 	} else {
 		fmt.Println("Events table created or already exists.")
 	}
+
+
+	createRegister := `
+	CREATE TABLE IF NOT EXISTS Registration(
+	ID INTEGER PRIMARY KEY AUTOINCREMENT,
+	UserID INTEGER,
+	EventID INTEGER,
+	FOREIGN KEY(UserID) REFERENCES User(UserID),
+	FOREIGN KEY(EventID) REFERENCES events(ID)
+
+	)
+	`
+	_,err = DB.Exec(createRegister)
+
+	if(err!=nil){
+		panic("Could not create")
+	}
+
 }

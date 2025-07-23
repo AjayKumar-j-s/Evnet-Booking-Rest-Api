@@ -1,11 +1,13 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/AjayKumar-j-s/EventPlanner/models"
-	"net/http"
 	"fmt"
+	"net/http"
 	"strconv"
+
+	"github.com/AjayKumar-j-s/EventPlanner/models"
+	// "github.com/AjayKumar-j-s/EventPlanner/utils"
+	"github.com/gin-gonic/gin"
 )
 
 func GetEvents(context *gin.Context){
@@ -21,16 +23,27 @@ func GetEvents(context *gin.Context){
 
 
 func CreateEvents(context *gin.Context){
+
+	
+
 	var event models.Event
 
-	//this will collectt the data from the post request and add the respected data to the struct variable
 
 	err := context.ShouldBindJSON(&event)
+	//this will collectt the data from the post request and add the respected data to the struct variable
+
 
 	if(err != nil){
-		context.JSON(http.StatusBadRequest,gin.H{"message":"Could not parse provide the essential information"})
+		res := fmt.Sprint(err)
+		context.JSON(http.StatusBadRequest,gin.H{"message":"Could not parse provide the essential information","err":res})
 		return
 	}
+
+	
+	id := context.GetInt64("uid")
+	event.UserID = id
+
+
 
 	err = event.Save()
 
@@ -76,7 +89,16 @@ func Updateevent(context *gin.Context){
 		return
 	}
 
-	_,err = models.GetEvent(id)
+	
+	uid := context.GetInt64("uid")
+	event,err := models.GetEvent(id)
+
+	if(event.UserID != uid){
+	context.JSON(http.StatusUnauthorized,gin.H{"message":"Not Authorized to Update Event"})
+	return
+	}
+
+
 
 	if(err != nil){
 		context.JSON(http.StatusInternalServerError,gin.H{"message":"Could not fetch event"})
@@ -117,6 +139,14 @@ func DeleteEvent(context *gin.Context){
 		context.JSON(http.StatusBadRequest,gin.H{"message":"Could not delete Event"})
 		return
 	}
+	
+	// uid := context.GetInt64("uid")
+
+	// if(event.UserID != uid){
+	// context.JSON(http.StatusUnauthorized,gin.H{"message":"Not Authorized to Update Event"})
+	// return
+	// }
+
 
 	err = models.DeleteEvent(id)
 
