@@ -20,3 +20,16 @@ func (r *Reg) Register()(error) {
 	return err
 
 }
+
+func CancelReg(uid,Eid int64)(error){
+
+	query := `DELETE FROM Registration 
+	WHERE UserID = ? AND EventID = ?
+	`
+
+	_,err := db.DB.Exec(query,uid,Eid)
+
+
+	return err
+
+}

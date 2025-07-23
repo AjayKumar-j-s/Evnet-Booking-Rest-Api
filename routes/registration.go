@@ -3,14 +3,13 @@ package routes
 import (
 	"net/http"
 	"strconv"
-
 	"github.com/AjayKumar-j-s/EventPlanner/models"
 	"github.com/gin-gonic/gin"
 )
 
 func RegisterEvent(context *gin.Context){
 
-	userId := context.GetInt64("id")
+	userId := context.GetInt64("uid")
 	event_id,err := strconv.ParseInt(context.Param("id"),10,64)
 
 	if(err != nil){
@@ -39,9 +38,25 @@ func RegisterEvent(context *gin.Context){
 	context.JSON(http.StatusOK,gin.H{"message":"Successfull registered"})
 
 
-
+	
 }	
 
 func CancelRegistration(context *gin.Context){
+
+	u_id := context.GetInt64("uid")
+
+	event_id,err := strconv.ParseInt(context.Param("id"),10,64)
+
+	if(err != nil){
+		context.JSON(http.StatusInternalServerError,gin.H{"message":"Couldn't delete"})
+		return
+	}
+
+	err = models.CancelReg(u_id,event_id)
+
+
+	context.JSON(http.StatusOK,gin.H{"message":"Successfully Deleted"})
+
+
 
 }
